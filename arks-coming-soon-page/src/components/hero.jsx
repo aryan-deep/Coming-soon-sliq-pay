@@ -74,7 +74,7 @@ useEffect(() => {
   return (
     <div
       ref={containerRef}
-      className="relative w-screen h-screen flex items-center text-start justify-center overflow-hidden"
+      className="relative w-screen h-screen flex items-center text-start justify-center"
       onMouseMove={handleMove}
       onMouseEnter={handleEnter}
       onMouseLeave={handleLeave}
