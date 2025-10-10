@@ -44,7 +44,7 @@ export default function RootLayout({ children }) {
               className=" relative md:left-[300px] md:top-[-35px] text-base text-[16px] h-[48px] text-[#3D444F] w-[270px] md:w-[206px]"
               style={{ fontFamily: 'Nunito' }}
             >
-              Pay anyone in the world instantly, with one click.
+              Pay anyone in the world instantly, with a click.
             </p>
           </div>
         </Hero>

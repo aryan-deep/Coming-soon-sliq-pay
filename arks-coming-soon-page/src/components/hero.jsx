@@ -74,11 +74,10 @@ useEffect(() => {
   return (
     <div
       ref={containerRef}
-      className="relative w-screen h-screen flex items-center text-start justify-center"
+      className="relative w-screen h-screen flex items-center text-start justify-center overflow-hidden"
       onMouseMove={handleMove}
       onMouseEnter={handleEnter}
       onMouseLeave={handleLeave}
-      style={{ touchAction: "none" }}
     >
       <img
         src={bgImg}
