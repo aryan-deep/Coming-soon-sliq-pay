@@ -64,7 +64,7 @@ const WaitlistSection = () => {
           value={formData.name}
           onChange={handleChange}
           required
-          className="w-full text-[18px] text-black border border-gray-200 rounded-lg px-4 py-2 mb-2 outline-none focus:ring-2 focus:ring-indigo-300 transition placeholder:text-gray-400"
+          className="w-full text-[18px] text-black border-b border-gray-200 px-4 py-2 mb-2 outline-none focus:ring-2 focus:ring-indigo-300 transition placeholder:text-gray-400"
         />
 
         <input
@@ -74,7 +74,7 @@ const WaitlistSection = () => {
           value={formData.email}
           onChange={handleChange}
           required
-          className="w-full border text-black border-gray-200 rounded-lg px-4 py-2 mb-4 outline-none focus:ring-2 focus:ring-indigo-300 transition placeholder:text-gray-400"
+          className="w-full border-b text-black border-gray-200 px-4 py-2 mb-4 outline-none focus:ring-2 focus:ring-indigo-300 transition placeholder:text-gray-400"
         />
 
         <button
@@ -84,7 +84,7 @@ const WaitlistSection = () => {
           <img
             src="/svg/joinWaitlist.svg"
             alt="joinWaitlist"
-            className="w-[175px] h-[55px] max-sm:w-[120px] max-sm:h-[38px]"
+            className="w-[174px] h-[52px] max-sm:w-[120px] max-sm:h-[38px]"
           />
         </button>
         {status && <div className="mt-2 text-black">{status}</div>}

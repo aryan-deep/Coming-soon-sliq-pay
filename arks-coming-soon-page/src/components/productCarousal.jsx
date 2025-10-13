@@ -7,7 +7,7 @@ import "swiper/css";
 import "swiper/css/effect-fade";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Features from "./features";
+import Products from "./products";
 
 
 gsap.registerPlugin(ScrollTrigger);
@@ -104,7 +104,7 @@ const ProductsCarousel = () => {
       >
         {PRODUCTS.map((props, i) => (
           <SwiperSlide key={i}>
-            <Features
+            <Products
               {...props}
               active={activeSlide === i}
             />

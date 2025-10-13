@@ -10,7 +10,7 @@ const Header = () => (
       <img
         src="/svg/sliqpay.svg"
         alt="Sliqpay Logo"
-        className="w-32 h-auto max-sm:w-24"
+        className="h-[32px] w-[127px] md:h-[40px] md:w-[177px]"
       />
       <a
         href="#"
@@ -23,7 +23,7 @@ const Header = () => (
         <img
           src="/svg/joinWaitlist.svg"
           alt="joinWaitlist"
-          className="w-[175px] h-[55px] max-sm:w-[120px] max-sm:h-[38px]"
+          className="w-[174px] h-[52px] max-sm:w-[120px] max-sm:h-[38px]"
         />
       </a>
     </nav>
