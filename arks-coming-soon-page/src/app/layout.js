@@ -35,13 +35,14 @@ export default function RootLayout({ children }) {
             >
               Money,
               <br className="md:hidden" />
-              <span className="flex items-center gap-2">
-                set Free
+              {' '}
+              <span className="flex items-center md:ml-3 gap-2">
+                 set free
                 <img src="/svg/Stars.png" alt="stars" className="w-[32px] h-[34px] md:w-[90px] md:h-[90px]" />
               </span>
             </h1>
             <p
-              className=" relative md:left-[300px] md:top-[-35px] text-base text-[16px] h-[48px] text-[#3D444F] w-[270px] md:w-[206px]"
+              className=" relative text-left md:left-[350px] md:top-[-35px] text-base text-[16px] h-[48px] text-[#3D444F] w-[270px] md:w-[206px]"
               style={{ fontFamily: 'Nunito' }}
             >
               Pay anyone in the world instantly, with a click.

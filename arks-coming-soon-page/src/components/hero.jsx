@@ -11,7 +11,7 @@ const Hero = ({ frontImg, bgImg, bgImgHover, children }) => {
   const containerRef = useRef(null);
   const hoverImgRef = useRef(null);
 
-  // Target (updated on mouse move)
+  // Target (updated on mouse / touch)
   const target = useRef({
     x: 0,
     y: 0,
@@ -28,7 +28,7 @@ const Hero = ({ frontImg, bgImg, bgImgHover, children }) => {
     alpha: ALPHA_LEAVE,
   });
 
-  // Previous values (for optimization)
+  // Previous values (for minimizing DOM writes)
   const prev = useRef({
     alpha: current.current.alpha,
     x: Math.round(current.current.x),
@@ -36,7 +36,6 @@ const Hero = ({ frontImg, bgImg, bgImgHover, children }) => {
     r: Math.round(current.current.radius),
   });
 
-  // Refs (JSX-safe)
   const animFrame = useRef(null);
   const loopRunning = useRef(false);
 
@@ -58,12 +57,65 @@ const Hero = ({ frontImg, bgImg, bgImgHover, children }) => {
     }
   }, []);
 
+  // Animation tick (uses refs only)
+  const loopTick = useCallback(() => {
+    current.current.x += (target.current.x - current.current.x) * TRAIL_SPEED;
+    current.current.y += (target.current.y - current.current.y) * TRAIL_SPEED;
+    current.current.alpha += (target.current.alpha - current.current.alpha) * 0.12;
+    current.current.radius += (target.current.radius - current.current.radius) * 0.12;
+
+    const img = hoverImgRef.current;
+    if (img) {
+      const alpha = Math.max(0, Math.min(1, current.current.alpha));
+
+      // update opacity if changed significantly
+      if (Math.abs(alpha - prev.current.alpha) > 0.005) {
+        img.style.opacity = String(alpha);
+        prev.current.alpha = alpha;
+      }
+
+      // update mask variables when mask is visible
+      if (alpha > 0.01) {
+        const rx = Math.round(current.current.x);
+        const ry = Math.round(current.current.y);
+        const rr = Math.round(current.current.radius);
+
+        if (rx !== prev.current.x) {
+          img.style.setProperty("--mask-x", `${rx}px`);
+          prev.current.x = rx;
+        }
+        if (ry !== prev.current.y) {
+          img.style.setProperty("--mask-y", `${ry}px`);
+          prev.current.y = ry;
+        }
+        if (rr !== prev.current.r) {
+          img.style.setProperty("--mask-r", `${rr}px`);
+          prev.current.r = rr;
+        }
+      }
+    }
+
+    // stop the loop when alpha reached target and is near zero
+    const shouldStop =
+      Math.abs(current.current.alpha - target.current.alpha) < 0.005 &&
+      current.current.alpha <= 0.01 &&
+      target.current.alpha <= 0.01;
+
+    if (shouldStop) {
+      loopRunning.current = false;
+      animFrame.current = null;
+      return;
+    }
+
+    animFrame.current = requestAnimationFrame(loopTick);
+  }, []);
+
   const startLoop = useCallback(() => {
     if (!loopRunning.current) {
       loopRunning.current = true;
       animFrame.current = requestAnimationFrame(loopTick);
     }
-  }, []);
+  }, [loopTick]);
 
   const applyImmediateReveal = (x, y, r, alpha) => {
     const img = hoverImgRef.current;
@@ -96,6 +148,7 @@ const Hero = ({ frontImg, bgImg, bgImgHover, children }) => {
     target.current.alpha = ALPHA_ENTER;
     target.current.active = true;
 
+    // immediate apply so users see the effect right away
     applyImmediateReveal(x, y, target.current.radius, target.current.alpha);
     startLoop();
   };
@@ -129,56 +182,7 @@ const Hero = ({ frontImg, bgImg, bgImgHover, children }) => {
     target.current.y = touch.clientY - rect.top;
   };
 
-  // Animation loop
-  const loopTick = useCallback(() => {
-    current.current.x += (target.current.x - current.current.x) * TRAIL_SPEED;
-    current.current.y += (target.current.y - current.current.y) * TRAIL_SPEED;
-    current.current.alpha += (target.current.alpha - current.current.alpha) * 0.12;
-    current.current.radius += (target.current.radius - current.current.radius) * 0.12;
-
-    const img = hoverImgRef.current;
-    if (img) {
-      const alpha = Math.max(0, Math.min(1, current.current.alpha));
-      if (Math.abs(alpha - prev.current.alpha) > 0.005) {
-        img.style.opacity = String(alpha);
-        prev.current.alpha = alpha;
-      }
-
-      if (alpha > 0.01) {
-        const rx = Math.round(current.current.x);
-        const ry = Math.round(current.current.y);
-        const rr = Math.round(current.current.radius);
-
-        if (rx !== prev.current.x) {
-          img.style.setProperty("--mask-x", `${rx}px`);
-          prev.current.x = rx;
-        }
-        if (ry !== prev.current.y) {
-          img.style.setProperty("--mask-y", `${ry}px`);
-          prev.current.y = ry;
-        }
-        if (rr !== prev.current.r) {
-          img.style.setProperty("--mask-r", `${rr}px`);
-          prev.current.r = rr;
-        }
-      }
-    }
-
-    const shouldStop =
-      Math.abs(current.current.alpha - target.current.alpha) < 0.005 &&
-      current.current.alpha <= 0.01 &&
-      target.current.alpha <= 0.01;
-
-    if (shouldStop) {
-      loopRunning.current = false;
-      animFrame.current = null;
-      return;
-    }
-
-    animFrame.current = requestAnimationFrame(loopTick);
-  }, []);
-
-  // Initialize animation loop on mount
+  // Start animation loop on mount so first interaction is smooth
   useEffect(() => {
     if (!loopRunning.current) {
       loopRunning.current = true;
@@ -202,12 +206,9 @@ const Hero = ({ frontImg, bgImg, bgImgHover, children }) => {
       onTouchMove={handleTouchMove}
       onTouchEnd={stopReveal}
       style={{
-    backgroundImage:
-      "linear-gradient(to bottom, #ffffff 0%, #ffffff 40%, #f8f9fb 70%, #ffffff 100%)",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    backgroundRepeat: "no-repeat",
-  }}
+        // keep a faint bright base so overlay blends nicely
+        backgroundColor: "#fff",
+      }}
     >
       {/* Base Background */}
       <img
@@ -217,12 +218,26 @@ const Hero = ({ frontImg, bgImg, bgImgHover, children }) => {
         draggable={false}
       />
 
-      {/* Hover Image (masked reveal) */}
+      {/* Top white overlay — pure white up to 40%, then fades to transparent */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-x-0 top-0 h-full z-10 pointer-events-none"
+        style={{
+          background:
+            "linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 20%, rgba(255,255,255,0) 40%)",
+          // use lighten/screen depending on your image; try 'lighten' first
+          mixBlendMode: "lighten",
+          pointerEvents: "none",
+          transform: "translateZ(0)",
+        }}
+      />
+
+      {/* Hover Image (masked reveal) — keep above top overlay so reveal shows hover image */}
       <img
         ref={hoverImgRef}
         src={bgImgHover}
         alt="Background hover"
-        className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none"
+        className="absolute inset-0 w-full h-full object-cover z-20 pointer-events-none"
         style={{
           opacity: 0,
           willChange: "mask-image, -webkit-mask-image, opacity",
@@ -233,13 +248,33 @@ const Hero = ({ frontImg, bgImg, bgImgHover, children }) => {
         }}
         draggable={false}
       />
+
+      {/* Bottom cloud overlay — covers ~25% of height (25vh) with soft blurred blobs */}
+      <div
+        aria-hidden="true"
+        className="absolute left-0 right-0 bottom-0 h-[15vh] z-35 pointer-events-none"
+        style={{
+          background:
+            `radial-gradient(circle at 10% 80%, rgba(255,255,255,0.98) 0%, rgba(255,255,255,0.9) 18%, rgba(255,255,255,0) 45%),
+             radial-gradient(circle at 50% 95%, rgba(255,255,255,0.98) 0%, rgba(255,255,255,0.92) 16%, rgba(255,255,255,0) 46%),
+             radial-gradient(circle at 85% 82%, rgba(255,255,255,0.96) 0%, rgba(255,255,255,0.9) 20%, rgba(255,255,255,0) 48%)`,
+          filter: "blur(100px)",
+          transform: "translateY(6%)",
+          opacity: 0.98,
+          pointerEvents: "none",
+        }}
+      />
+
+      {/* Foreground Hero Image (responsive, proportional and left-anchored) */}
       <img
         src={frontImg}
         alt="Hero"
-        className=" absolute left-0 bottom-0 translate-x-0 max-w-xl h-[80vh] md:w-[100vw] md:h-auto md:max-w-none z-10 pointer-events-none"
+        className=" absolute left-0 bottom-0 translate-x-0 max-w-xl h-[80vh] md:w-[100vw] md:h-auto md:max-w-none z-30 pointer-events-none"
         draggable={false}
       />
-      <div className="absolute top-[30px] left-0 w-full px-4 flex flex-col items-start text-left md:items-center md:text-center z-20">
+
+      {/* Overlay content */}
+      <div className="absolute top-[30px] left-0 w-full px-4 flex flex-col items-start text-left md:items-center md:text-center z-29">
         {children}
       </div>
     </div>
