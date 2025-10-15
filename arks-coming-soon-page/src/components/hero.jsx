@@ -269,7 +269,7 @@ const Hero = ({ frontImg, bgImg, bgImgHover, children }) => {
       <img
         src={frontImg}
         alt="Hero"
-        className=" absolute left-0 bottom-0 translate-x-0 max-w-xl h-[80vh] md:w-[100vw] md:h-auto md:max-w-none z-30 pointer-events-none"
+        className=" absolute left-0 bottom-0 translate-x-0 max-w-xl h-[60vh] md:w-[100vw] md:h-auto md:max-w-none z-30 pointer-events-none"
         draggable={false}
       />
 

@@ -29,6 +29,7 @@ const WaitlistSection = () => {
 
   return (
     <section
+     id="waitlist" 
       className="relative w-full px-[20px] flex flex-col items-center justify-start min-h-screen overflow-hidden"
       style={{
         backgroundImage: "url('/image/waitlistBg.png')",
@@ -82,7 +83,7 @@ const WaitlistSection = () => {
             value={formData.email}
             onChange={handleChange}
             required
-            className="flex-1 px-4 py-2 outline-none focus:ring-2 focus:ring-indigo-300 transition placeholder:text-gray-400"
+            className="flex-1 px-2 py-2 outline-none focus:ring-2 focus:ring-indigo-300 transition placeholder:text-gray-400"
           />
         </div>
 
