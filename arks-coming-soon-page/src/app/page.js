@@ -1,56 +1,60 @@
-import Image from "next/image";
+import Banner from "@/components/banner";
+import WaitlistSection from "@/components/waitlistSection";
+import Hero from "@/components/hero";
+import ProductCarousel from '@/components/productCarousal';
+import FeaturesCarousel from '@/components/featureCarousal';
 
 export default function Home() {
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        {/* <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        /> */}
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-white/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.js
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <>
+      <Hero
+        frontImg="/image/heroFrontImage.png"
+        bgImg="/image/backgroundLayer.png"
+        bgImgHover="/image/heroHoverBackgroundlayer.png"
+      >
+        <div className="absolute top-[120px] left-0 w-full px-4 flex flex-col items-start text-left md:items-center md:text-center z-20">
+          {/* DESKTOP: single-line (visible md+) */}
+          <h1
+            className="hidden md:flex leading-[1.20] text-[40px] md:text-[88px] text-[#0C1523] mb-2 md:mb-4 font-bold items-center justify-center"
+            style={{ fontFamily: "Malinton" }}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-white/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            <span>Money,</span>
+            <span className="flex items-center gap-2 md:ml-3">
+              set free
+              <img
+                src="/svg/Stars.png"
+                alt="stars"
+                className="w-[32px] h-[34px] md:w-[90px] md:h-[90px]"
+              />
+            </span>
+          </h1>
+          {/* MOBILE: two-line (visible <md) */}
+          <div
+            className="flex md:hidden flex-col leading-[1.20] text-[40px] text-[#0C1523] mb-2 font-bold items-start"
+            style={{ fontFamily: "Malinton" }}
           >
-            Read our docs
-          </a>
+            <span>Money,</span>
+            <span className="flex items-center gap-2 mt-1">
+              set free
+              <img
+                src="/svg/Stars.png"
+                alt="stars"
+                className="w-[32px] h-[34px]"
+              />
+            </span>
+          </div>
+          <p
+            className="relative text-left md:left-[350px] md:top-[-35px] text-base text-[16px] h-[48px] text-[#3D444F] w-[270px] md:w-[206px]"
+            style={{ fontFamily: 'Nunito' }}
+          >
+            Pay anyone in the world instantly, with a click.
+          </p>
         </div>
-      </main>
-    </div>
+      </Hero>
+      <FeaturesCarousel />
+      <Banner />
+      <ProductCarousel />
+      <WaitlistSection />
+    </>
   );
 }

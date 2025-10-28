@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useCallback } from "react";
+import Link from "next/link";
 
 const Header = () => {
   const handleGotoWaitlist = useCallback((e) => {
@@ -31,6 +32,24 @@ const Header = () => {
           className="h-[32px] w-[127px] md:h-[40px] md:w-[177px]"
         />
 
+        {/* Navigation Links */}
+        <div className="flex items-center gap-8 max-sm:hidden"
+        style={{ fontFamily: 'Nunito' }}>
+          <Link href="/products" className="text-black text-[18px] font-semibold hover:text-primary transition">
+            Products
+          </Link>
+          <Link href="/security" className="text-black text-[18px] font-semibold hover:text-primary transition">
+            Security
+          </Link>
+          <Link href="/features" className="text-black text-[18px] font-semibold hover:text-primary transition">
+            Features
+          </Link>
+          <Link href="/blog" className="text-black text-[18px] font-semibold hover:text-primary transition">
+            Blogs
+          </Link>
+        </div>
+
+        {/* Waitlist Button */}
         <a
           href="#waitlist"
           onClick={handleGotoWaitlist}
