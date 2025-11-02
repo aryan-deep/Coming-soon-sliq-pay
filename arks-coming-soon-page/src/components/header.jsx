@@ -49,6 +49,9 @@ const Header = () => {
           <Link href="/features" className="text-[#0C1523] font-bold leading-[27px] px-[16px] text-[18px]  hover:text-primary transition">
             Features
           </Link> */}
+          <Link href="/" className="text-[#0C1523] font-bold leading-[27px] px-[16px] text-[18px]  hover:text-primary transition">
+            Home
+          </Link>
           <Link href="/blog" className="text-[#0C1523] font-bold leading-[27px] px-[16px] text-[18px]  hover:text-primary transition">
             Blogs
           </Link>
